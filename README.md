@@ -49,6 +49,47 @@
     end (while loop)
 
 ``````
+```
+import heapq
+
+graph = {
+    "A": {"B": 6, "F": 3},
+    "B": {"D": 2, "C": 3},
+    "C": {"D": 1, "E": 5},
+    "D": {"E": 8},
+    "E": {"I": 5, "J": 5},
+    "F": {"G": 1, "H": 7},
+    "G": {"I": 3},
+    "I": {"J": 3, "H": 2}
+}
+
+heuristic = {"A":10, "B":8, "C":5, "D":7, "E":3, "F":6, "G":5, "H":3, "I":1, "J":0}
+
+def A_star(start, goal):
+    open_list = [(0, start)]
+    parents = {start: None}
+    g = {start: 0}
+
+    while open_list:
+        f, node = heapq.heappop(open_list)
+        if node == goal:
+            path = []
+            while node:
+                path.append(node)
+                node = parents[node]
+            return path[::-1]
+
+        for child, cost in graph.get(node, {}).items():
+            new_g = g[node] + cost
+            if child not in g or new_g < g[child]:
+                g[child] = new_g
+                f = new_g + heuristic[child]
+                parents[child] = node
+                heapq.heappush(open_list, (f, child))
+
+print("Path:", A_star("A", "J"))
+
+````
 
 <hr>
 <h2>Sample Graph I</h2>
